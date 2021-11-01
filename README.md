@@ -1,6 +1,6 @@
 # Wie installiert man den Bums?
 1. Downloaded euch das Repo und entzippt es.
-2. hit it with the `npm install`
+2. hit it with the `yarn install` (wenn ihr yarn nicht habt dann vorher noch schnell `npm install -g yarn`)
 3. Dann geht in chrome auf `chrome:extensions`
 4. Clickt auf `entpackte Erweiterung laden`
 5. wählt den Ordner aus in dem ihr das repo entpackt habt
