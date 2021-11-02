@@ -19,15 +19,17 @@ $(document).ready(function(){
 
     
 
-    $('.btn').on('click', function(){
+    $('.download').on('click', function(){
 
         const startMatrikelNr = $('#start-matrikel-nr').val()
         const endMatrikelNr = $('#end-matrikel-nr').val();
+        const fileName = $('#file-name').val()
 
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const request = {
                 startMatrikelNr,
-                endMatrikelNr
+                endMatrikelNr,
+                fileName
             }
 
             chrome.tabs.sendMessage(tabs[0].id, request, function(response) {
@@ -39,6 +41,13 @@ $(document).ready(function(){
     $('input').on('input', function(){
         chrome.storage.local.set({'startMatrikelNr': $('#start-matrikel-nr').val()})
         chrome.storage.local.set({'endMatrikelNr': $('#end-matrikel-nr').val()})
+    })
+
+    $('.clear').on('click', function(){
+        $('#start-matrikel-nr').val('')
+        $('#end-matrikel-nr').val('')
+        chrome.storage.local.set({'startMatrikelNr': ''})
+        chrome.storage.local.set({'endMatrikelNr': ''})
     })
 
 })
