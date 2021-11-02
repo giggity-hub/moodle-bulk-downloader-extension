@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "array.prototype.findindex": "^2.1.0"
+    "array.prototype.findindex": "^2.1.0",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.7.1"
   }
 }
