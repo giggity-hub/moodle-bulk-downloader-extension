@@ -1,17 +1,10 @@
 // const findIndex = require('array.prototype.findindex')
 // findIndex.shim()
 
-function saveBlob(blob, fileName) {
-    var a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style = "display: none";
+const saveAs = require('file-saver');
+const JSZip = require('jszip');
 
-    var url = window.URL.createObjectURL(blob);
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
-};
+
 
 function formatFileName(submission, i){
     const {fullName, matrikelNr} = submission
@@ -21,16 +14,41 @@ function formatFileName(submission, i){
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         
-        const {startMatrikelNr, endMatrikelNr} = request;
+        const {startMatrikelNr, endMatrikelNr, fileName} = request;
 
 
         const mopeds = moped(startMatrikelNr, endMatrikelNr)
 
-        mopeds.forEach((el,i) => {
-            fetch(el.submissionLink)
-                .then(res => res.blob())
-                .then(blob => saveBlob(blob, formatFileName(el, i+1)))
-        });
+        Promise.all(mopeds.map(async (el, i) => {
+            const blob = await fetch(el.submissionLink).then(res => res.blob())
+            const fileName = formatFileName(el, i+1)
+            return {blob, fileName}
+        })
+        ).then(files => {
+            let zip = new JSZip();
+
+
+            console.log(files);
+            for (let file of files){
+                zip.file(file.fileName, file.blob)
+                // saveAs(file.blob, file.fileName)
+            }
+
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                // see FileSaver.js
+                saveAs(content, `${fileName}.zip`);
+            });
+        })
+
+
+        // mopeds.forEach((el,i) => {
+        //     fetch(el.submissionLink)
+        //         .then(res => res.blob())
+        //         .then(blob => saveBlob(blob, formatFileName(el, i+1)))
+        //         .catch(err => {
+        //             console.error(err)
+        //         })
+        // });
 
         sendResponse({ok: 'ok'})
     }
