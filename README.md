@@ -13,3 +13,8 @@
 5. clickt auf Download im extendo popup
 6. ???
 7. Profit
+
+# Bundling
+```
+browserify content-script.js -o bundle.js
+```
